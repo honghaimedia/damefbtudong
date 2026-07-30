@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trang Web Quản Lý và Chạy File</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 20px;
+            background-color: #f9f9f9;
+            color: #333;
+        }
+        .section {
+            background: #fff;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        h2 {
+            margin-top: 0;
+            color: #0066cc;
+            font-size: 1.2rem;
+        }
+        input[type="file"], input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin-top: 8px;
+            margin-bottom: 15px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            background-color: #0066cc;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0055b3;
+        }
+        pre {
+            background: #f4f4f4;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+            max-height: 200px;
+        }
+        .iframe-container {
+            margin-top: 15px;
+            position: relative;
+            width: 100%;
+            height: 400px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            display: none;
+        }
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Trang Quản Lý và Chạy File / Link</h1>
+
+    <!-- PHẦN 1: TẢI FILE LÊN VÀ TỰ ĐỘNG ĐỌC -->
+    <div class="section">
+        <h2>1. Tải file lên máy</h2>
+        <label for="fileInput">Chọn file văn bản (.txt, .json, .html, v.v.):</label>
+        <input type="file" id="fileInput">
+        
+        <h3>Nội dung file (Tự động hiển thị):</h3>
+        <pre id="fileOutput">Chưa có file nào được tải lên...</pre>
+    </div>
+
+    <!-- PHẦN 2: NHẬP LINK ĐỂ CHẠY -->
+    <div class="section">
+        <h2>2. Nhập link để chạy / hiển thị</h2>
+        <label for="linkInput">Nhập đường dẫn (URL trang web, video, hoặc file trực tuyến):</label>
+        <input type="text" id="linkInput" placeholder="Ví dụ: https://example.com hoặc https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf">
+        
+        <button onclick="runLink()">Chạy Link</button>
+
+        <!-- Khung hiển thị kết quả chạy link -->
+        <div class="iframe-container" id="iframeContainer">
+            <iframe id="linkFrame" src=""></iframe>
+        </div>
+    </div>
+
+    <script>
+        // Xử lý phần 1: Tự động đọc file khi người dùng tải lên
+        document.getElementById('fileInput').addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            const output = document.getElementById('fileOutput');
+            
+            if (!file) {
+                output.textContent = "Chưa có file nào được chọn.";
+                return;
+            }
+
+            const reader = new FileReader();
+            
+            // Sự kiện tự động kích hoạt khi đọc xong file
+            reader.onload = function(e) {
+                output.textContent = e.target.result;
+            };
+
+            reader.onerror = function() {
+                output.textContent = "Lỗi khi đọc file!";
+            };
+
+            // Đọc file dưới dạng văn bản
+            reader.readAsText(file);
+        });
+
+        // Xử lý phần 2: Chạy link khi bấm nút
+        function runLink() {
+            const url = document.getElementById('linkInput').value.trim();
+            const container = document.getElementById('iframeContainer');
+            const frame = document.getElementById('linkFrame');
+
+            if (!url) {
+                alert('Vui lòng nhập một đường link hợp lệ!');
+                return;
+            }
+
+            // Hiển thị khung chứa iframe và gán đường dẫn
+            container.style.display = 'block';
+            frame.src = url;
+        }
+    </script>
+
+</body>
+</html>
